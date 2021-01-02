@@ -1,0 +1,3 @@
+Git Hash: 9aec1f8
+Buildtime: Sat Jan 02 16:20:39 CST 2021
+Application-name: foobarbaz app

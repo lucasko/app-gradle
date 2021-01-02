@@ -10,16 +10,20 @@ sourceSets {
         java {
             srcDir 'src'
         }
+        
     }
 }
 
 dependencies { 
-	compile fileTree(dir: 'libs', include: ['*.jar'])
+	//compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile name: 'myLibs'
 }
-
 
 repositories {
     mavenCentral()
+    flatDir {
+       dirs 'libs'
+   }
 }
 
 mainClassName = 'com.lucasko.App'
@@ -28,6 +32,9 @@ version = '1.5'
 
 
 jar {
+	from('./') {
+      include 'version.txt'
+   }
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',
                 'Implementation-Version': version,
@@ -37,14 +44,13 @@ jar {
     from configurations.runtime.asFileTree.files.collect { zipTree(it) }
 }
 
-def gitCommitHash(){ 
-'git rev-parse --verify --short HEAD'.execute().text.trim()
+def createVersionTxt(){ 
+	def hash = 'git rev-parse --verify --short HEAD'.execute().text.trim()
+	 	new File(projectDir, "version.txt").text = """
+Git Hash: $hash
+Buildtime: ${new Date()}
+Application-name: foobarbaz app
+""".trim()
 }
 
-task getCommit { it ->
-
- doLast{
- 	gitCommitHash();
- }
-
-}
+createVersionTxt()
